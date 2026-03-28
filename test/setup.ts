@@ -8,6 +8,7 @@ dotenv.config({ quiet: true, path: ".env.test.local" });
 // Mock Next.js redirect function
 vi.mock("next/navigation", () => ({
   redirect: vi.fn(),
+  notFound: vi.fn(),
   useRouter: vi.fn(() => ({
     push: vi.fn(),
     replace: vi.fn(),
