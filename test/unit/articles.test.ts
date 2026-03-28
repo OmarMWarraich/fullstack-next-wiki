@@ -111,6 +111,28 @@ describe("Article Actions", () => {
       });
       expect(db.insert).toHaveBeenCalledWith(articles);
     });
+
+    it("should keep summary unset when summarization returns undefined", async () => {
+      const values = vi.fn().mockReturnValue({
+        returning: vi.fn().mockResolvedValue([{ id: 1 }]),
+      });
+      vi.mocked(db.insert).mockReturnValue({
+        values,
+      } as unknown as ReturnType<typeof db.insert>);
+      vi.mocked(summarizeArticle).mockResolvedValue(undefined);
+
+      await createArticle({
+        title: "Test Article",
+        content: "Test content",
+        authorId: mockUser.id,
+      });
+
+      expect(values).toHaveBeenCalledWith(
+        expect.objectContaining({
+          summary: undefined,
+        }),
+      );
+    });
   });
 
   describe("updateArticle", () => {

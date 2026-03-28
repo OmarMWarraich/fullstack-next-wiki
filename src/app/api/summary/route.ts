@@ -80,13 +80,6 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  // Clear articles cache used by getArticles
-  try {
-    await redis.del(ARTICLES_CACHE_KEY);
-  } catch (e) {
-    console.warn("⚠️ Failed to clear articles cache", e);
-  }
-
   console.log(`🤖 Concluding AI summary job, updated ${updated} rows`);
   return NextResponse.json({ ok: true, updated });
 }

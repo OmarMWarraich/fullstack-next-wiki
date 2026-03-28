@@ -250,7 +250,7 @@ export async function getAdminAnalytics(): Promise<AdminAnalytics> {
     getDailyPageviews(),
   ]);
 
-  return buildAdminAnalytics(articleSnapshots.slice(0, 5), dailyPageviews);
+  return buildAdminAnalytics(articleSnapshots, dailyPageviews);
 }
 
 export async function getAdminOperationsStatus(): Promise<AdminOperationsStatus> {

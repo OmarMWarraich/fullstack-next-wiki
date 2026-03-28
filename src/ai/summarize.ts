@@ -14,12 +14,12 @@ function isTestEnv() {
 export async function summarizeArticle(
   title: string,
   article: string,
-): Promise<string> {
+): Promise<string | undefined> {
   if (isTestEnv()) {
     return "This is a test summary.";
   }
   if (!getRuntimeFeatureFlags().aiSummariesEnabled) {
-    return "";
+    return undefined;
   }
   if (!article || !article.trim()) {
     throw new Error("Article content is required to generate a summary.");
@@ -30,7 +30,9 @@ export async function summarizeArticle(
     system: "You are an assistant that writes concise factual summaries.",
     prompt,
   });
-  return (text ?? "").trim();
+  const summary = (text ?? "").trim();
+
+  return summary.length > 0 ? summary : undefined;
 }
 
 export default summarizeArticle;
