@@ -1,4 +1,5 @@
 import { generateText } from "ai";
+import { getRuntimeFeatureFlags } from "@/lib/config/feature-flags";
 
 export const SUMMARY_MODEL = "openai/gpt-5-nano";
 
@@ -16,6 +17,9 @@ export async function summarizeArticle(
 ): Promise<string> {
   if (isTestEnv()) {
     return "This is a test summary.";
+  }
+  if (!getRuntimeFeatureFlags().aiSummariesEnabled) {
+    return "";
   }
   if (!article || !article.trim()) {
     throw new Error("Article content is required to generate a summary.");

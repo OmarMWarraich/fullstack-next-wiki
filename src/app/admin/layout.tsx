@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import { AdminShell } from "@/components/admin/admin-shell";
 import { requireAdminUser } from "@/lib/admin/access";
 
+export const dynamic = "force-dynamic";
+
 type AdminLayoutProps = {
   children: ReactNode;
 };

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildAdminOverview } from "@/lib/data/admin";
+import { buildAdminAnalytics, buildAdminOverview } from "@/lib/data/admin";
 
 describe("admin overview aggregation", () => {
   it("summarizes totals, coverage, recent articles, and top articles", () => {
@@ -70,5 +70,44 @@ describe("admin overview aggregation", () => {
     expect(overview.totals.pageviews).toBe(0);
     expect(overview.recentArticles).toEqual([]);
     expect(overview.topArticles).toEqual([]);
+  });
+
+  it("builds analytics totals and day-over-day deltas", () => {
+    const analytics = buildAdminAnalytics(
+      [
+        {
+          id: 2,
+          title: "Beta",
+          author: "Blair",
+          updatedAt: "2025-01-02T00:00:00.000Z",
+          published: true,
+          hasSummary: true,
+          hasUpload: true,
+          pageviews: 40,
+        },
+        {
+          id: 1,
+          title: "Alpha",
+          author: "Alex",
+          updatedAt: "2025-01-01T00:00:00.000Z",
+          published: true,
+          hasSummary: true,
+          hasUpload: true,
+          pageviews: 10,
+        },
+      ],
+      [
+        { date: "2026-03-26", total: 3 },
+        { date: "2026-03-27", total: 7 },
+        { date: "2026-03-28", total: 9 },
+      ],
+    );
+
+    expect(analytics.totalPageviews).toBe(50);
+    expect(analytics.sevenDayPageviews).toBe(19);
+    expect(analytics.todayPageviews).toBe(9);
+    expect(analytics.yesterdayPageviews).toBe(7);
+    expect(analytics.deltaFromYesterday).toBe(2);
+    expect(analytics.averageDailyPageviews).toBe(6);
   });
 });

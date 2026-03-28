@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { getRuntimeFeatureFlags } from "@/lib/config/feature-flags";
 
 export const ADMIN_PROJECT_PERMISSION = "access_admin_dashboard";
 
@@ -29,6 +30,10 @@ export async function isAdminUser(
 }
 
 export async function requireAdminUser(): Promise<AdminUser> {
+  if (!getRuntimeFeatureFlags().adminDashboardEnabled) {
+    notFound();
+  }
+
   const { stackServerApp } = await import("@/stack/server");
   const user = await stackServerApp.getUser({ or: "redirect" });
 

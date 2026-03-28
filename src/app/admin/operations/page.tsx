@@ -82,6 +82,9 @@ export default async function AdminOperationsPage() {
                 <p className="mt-2">
                   Cron secret: {operations.summaryQueue.cronProtected ? "configured" : "missing"}
                 </p>
+                <p className="mt-2">
+                  Tracked failures: {operations.summaryQueue.trackedFailures}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -97,10 +100,72 @@ export default async function AdminOperationsPage() {
               <div className="rounded-lg border p-3">
                 <p className="font-medium text-foreground">Article list cache</p>
                 <p>{operations.cache.articlesKey}</p>
+                <p className="mt-1">
+                  Status: {operations.cache.articleListCached ? "present" : "missing"}
+                </p>
               </div>
               <div className="rounded-lg border p-3">
                 <p className="font-medium text-foreground">Pageview key pattern</p>
                 <p>{operations.cache.pageviewPattern}</p>
+              </div>
+              <div className="rounded-lg border p-3">
+                <p className="font-medium text-foreground">Visible Redis keys</p>
+                {operations.cache.visibleKeys.length === 0 ? (
+                  <p>No matching keys found.</p>
+                ) : (
+                  operations.cache.visibleKeys.map((key) => <p key={key}>{key}</p>)
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Summary Failures</CardTitle>
+              <CardDescription>
+                Latest failures captured from the scheduled summary route.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm text-muted-foreground">
+              {operations.summaryQueue.recentFailures.length === 0 ? (
+                <p>No failures recorded.</p>
+              ) : (
+                operations.summaryQueue.recentFailures.map((failure) => (
+                  <div key={`${failure.articleId}-${failure.occurredAt}`} className="rounded-lg border p-3">
+                    <p className="font-medium text-foreground">{failure.title}</p>
+                    <p>Article {failure.articleId}</p>
+                    <p>{failure.message}</p>
+                    <p>{failure.occurredAt}</p>
+                  </div>
+                ))
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Feature Flags</CardTitle>
+              <CardDescription>
+                Runtime flags currently controlling admin and AI behavior.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {operations.featureFlags.map((flag) => (
+                <div key={flag.key} className="flex items-center justify-between gap-3 rounded-lg border p-3">
+                  <div>
+                    <p className="font-medium text-foreground">{flag.label}</p>
+                    <p className="text-sm text-muted-foreground">{flag.description}</p>
+                  </div>
+                  <Badge variant={flag.enabled ? "secondary" : "outline"}>
+                    {flag.enabled ? "enabled" : "disabled"}
+                  </Badge>
+                </div>
+              ))}
+              <div className="rounded-lg border p-3 text-sm text-muted-foreground">
+                <p>
+                  Stack auth configuration: {operations.authStatus.stackAuthConfigured ? "configured" : "missing"}
+                </p>
+                <p className="mt-1">Admin permission: {operations.authStatus.adminPermission}</p>
               </div>
             </CardContent>
           </Card>

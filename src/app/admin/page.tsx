@@ -146,6 +146,29 @@ export default async function AdminOverviewPage() {
         <div className="space-y-4">
           <Card>
             <CardHeader>
+              <CardTitle>Admin Scope</CardTitle>
+              <CardDescription>
+                Jump directly into moderation, user access, analytics, or operations.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-2">
+              <Button asChild variant="outline">
+                <Link href="/admin/moderation">Open Moderation Queue</Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link href="/admin/users">Open User Management</Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link href="/admin/analytics">Open Analytics</Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link href="/admin/operations">Open Operations</Link>
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
               <CardTitle>Coverage</CardTitle>
               <CardDescription>
                 Article-level completion for summaries and uploaded images.
