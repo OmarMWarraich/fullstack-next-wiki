@@ -1,10 +1,7 @@
 ---
 description: "Use when modifying app routes, server actions, components, or tests. Enforces explicit test policy, required command matrix by change type, and minimum regression coverage."
 name: "Testing Policy"
-applyTo:
-  - "src/app/**/*.{ts,tsx}"
-  - "src/components/**/*.{ts,tsx}"
-  - "test/**/*.{ts,tsx}"
+applyTo: "src/app/**/*.{ts,tsx}", "src/components/**/*.{ts,tsx}", "test/**/*.{ts,tsx}"
 ---
 # Testing Policy
 

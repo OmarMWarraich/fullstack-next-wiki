@@ -1,9 +1,7 @@
 ---
 description: "Use when editing Drizzle queries in src/lib/data or write mutations in src/app/actions. Enforces typed select shapes, safer mutations, authz checks, and cache invalidation rules."
 name: "Data Layer and Mutation Safety"
-applyTo:
-  - "src/lib/data/**/*.ts"
-  - "src/app/actions/**/*.ts"
+applyTo: "src/lib/data/**/*.ts", "src/app/actions/**/*.ts"
 ---
 # Data Layer and Mutation Safety
 

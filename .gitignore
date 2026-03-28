@@ -49,3 +49,4 @@ next-env.d.ts
 .test-branch-info.json
 .test-server-pid.json
 test/playwright/.auth*
+TODO.md
