@@ -1,0 +1,90 @@
+diff --git a/node_modules/@stackframe/stack/dist/components/elements/ssr-layout-effect.js b/node_modules/@stackframe/stack/dist/components/elements/ssr-layout-effect.js
+index 99773f6..a4b1f8d 100644
+--- a/node_modules/@stackframe/stack/dist/components/elements/ssr-layout-effect.js
++++ b/node_modules/@stackframe/stack/dist/components/elements/ssr-layout-effect.js
+@@ -9,11 +9,10 @@ let react_jsx_runtime = require("react/jsx-runtime");
+ function SsrScript(props) {
+ 	(0, react.useLayoutEffect)(() => {
+ 		(0, eval)(props.script);
+-	}, []);
+-	return /* @__PURE__ */ (0, react_jsx_runtime.jsx)("script", {
++	}, [props.script]);
++	return /* @__PURE__ */ (0, react_jsx_runtime.jsx)("template", {
++		"data-stack-ssr-layout-effect": "",
+ 		suppressHydrationWarning: true,
+-		nonce: props.nonce,
+-		dangerouslySetInnerHTML: { __html: props.script }
+ 	});
+ }
+ 
+diff --git a/node_modules/@stackframe/stack/dist/esm/components/elements/ssr-layout-effect.js b/node_modules/@stackframe/stack/dist/esm/components/elements/ssr-layout-effect.js
+index 1233d79..9c84d46 100644
+--- a/node_modules/@stackframe/stack/dist/esm/components/elements/ssr-layout-effect.js
++++ b/node_modules/@stackframe/stack/dist/esm/components/elements/ssr-layout-effect.js
+@@ -7,11 +7,10 @@ import { jsx } from "react/jsx-runtime";
+ function SsrScript(props) {
+ 	useLayoutEffect(() => {
+ 		(0, eval)(props.script);
+-	}, []);
+-	return /* @__PURE__ */ jsx("script", {
++	}, [props.script]);
++	return /* @__PURE__ */ jsx("template", {
++		"data-stack-ssr-layout-effect": "",
+ 		suppressHydrationWarning: true,
+-		nonce: props.nonce,
+-		dangerouslySetInnerHTML: { __html: props.script }
+ 	});
+ }
+ 
+diff --git a/node_modules/@stackframe/stack/dist/esm/lib/stack-app/apps/implementations/session-replay.js b/node_modules/@stackframe/stack/dist/esm/lib/stack-app/apps/implementations/session-replay.js
+index 3d3981d..c7e1640 100644
+--- a/node_modules/@stackframe/stack/dist/esm/lib/stack-app/apps/implementations/session-replay.js
++++ b/node_modules/@stackframe/stack/dist/esm/lib/stack-app/apps/implementations/session-replay.js
+@@ -58,8 +58,20 @@ function safeParseStoredSession(raw) {
+ function makeStorageKey(projectId) {
+ 	return `${LOCAL_STORAGE_PREFIX}:${projectId}`;
+ }
++function formatUuidBytes(bytes) {
++	const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0"));
++	return `${hex.slice(0, 4).join("")}-${hex.slice(4, 6).join("")}-${hex.slice(6, 8).join("")}-${hex.slice(8, 10).join("")}-${hex.slice(10).join("")}`;
++}
+ function generateUuid() {
+-	return crypto.randomUUID();
++	const cryptoObject = globalThis.crypto;
++	if (cryptoObject?.randomUUID) return cryptoObject.randomUUID();
++	if (cryptoObject?.getRandomValues) {
++		const bytes = cryptoObject.getRandomValues(new Uint8Array(16));
++		bytes[6] = bytes[6] & 15 | 64;
++		bytes[8] = bytes[8] & 63 | 128;
++		return formatUuidBytes(bytes);
++	}
++	throw new Error("Stack Auth session replay requires Web Crypto support.");
+ }
+ function getOrRotateSession(options) {
+ 	const existing = safeParseStoredSession(localStorage.getItem(options.key));
+diff --git a/node_modules/@stackframe/stack/dist/lib/stack-app/apps/implementations/session-replay.js b/node_modules/@stackframe/stack/dist/lib/stack-app/apps/implementations/session-replay.js
+index 375f788..2835ef8 100644
+--- a/node_modules/@stackframe/stack/dist/lib/stack-app/apps/implementations/session-replay.js
++++ b/node_modules/@stackframe/stack/dist/lib/stack-app/apps/implementations/session-replay.js
+@@ -60,8 +60,20 @@ function safeParseStoredSession(raw) {
+ function makeStorageKey(projectId) {
+ 	return `${LOCAL_STORAGE_PREFIX}:${projectId}`;
+ }
++function formatUuidBytes(bytes) {
++	const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0"));
++	return `${hex.slice(0, 4).join("")}-${hex.slice(4, 6).join("")}-${hex.slice(6, 8).join("")}-${hex.slice(8, 10).join("")}-${hex.slice(10).join("")}`;
++}
+ function generateUuid() {
+-	return crypto.randomUUID();
++	const cryptoObject = globalThis.crypto;
++	if (cryptoObject?.randomUUID) return cryptoObject.randomUUID();
++	if (cryptoObject?.getRandomValues) {
++		const bytes = cryptoObject.getRandomValues(new Uint8Array(16));
++		bytes[6] = bytes[6] & 15 | 64;
++		bytes[8] = bytes[8] & 63 | 128;
++		return formatUuidBytes(bytes);
++	}
++	throw new Error("Stack Auth session replay requires Web Crypto support.");
+ }
+ function getOrRotateSession(options) {
+ 	const existing = safeParseStoredSession(localStorage.getItem(options.key));

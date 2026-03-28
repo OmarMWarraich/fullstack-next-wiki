@@ -185,6 +185,9 @@ export default function WikiEditor({
                   value={content}
                   onChange={(val) => setContent(val || "")}
                   preview="edit"
+                  previewOptions={{
+                    skipHtml: true,
+                  }}
                   hideToolbar={false}
                   visibleDragbar={false}
                   textareaProps={{

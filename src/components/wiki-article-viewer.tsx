@@ -149,6 +149,7 @@ export default function WikiArticleViewer({
           {/* Rendered Markdown Content */}
           <div className="prose prose-stone dark:prose-invert max-w-none">
             <ReactMarkdown
+              skipHtml
               components={{
                 // Customize heading styles
                 h1: ({ children }) => (
