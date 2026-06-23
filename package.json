@@ -37,7 +37,7 @@
     "@uiw/react-md-editor": "^4.0.8",
     "@upstash/redis": "^1.35.6",
     "@vercel/analytics": "^1.5.0",
-    "@vercel/blob": "^2.0.0",
+    "@vercel/blob": "^2.4.1",
     "@vercel/speed-insights": "^1.2.0",
     "ai": "^5.0.75",
     "class-variance-authority": "^0.7.1",
